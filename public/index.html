@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LAN Chat — Demo Jaringan</title>
+  <link rel="stylesheet" href="/css/style.css" />
+  <!-- Socket.IO DIHAPUS — komunikasi via HTTP polling murni -->
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══════════════════════════════════════════
+       SIDEBAR
+  ═══════════════════════════════════════════ -->
+  <aside id="sidebar">
+
+    <div id="sidebar-header">
+      <div class="app-brand">
+        <div class="app-logo">📡</div>
+        <div>
+          <div class="app-title">LAN Chat</div>
+          <div class="my-ip" id="my-ip-badge">mendeteksi IP...</div>
+        </div>
+      </div>
+      <button class="btn-new-chat" id="btn-new-chat" title="Chat baru">+</button>
+    </div>
+
+    <div id="search-wrap">
+      <input
+        type="text"
+        id="search-input"
+        placeholder="🔍  Cari IP..."
+        autocomplete="off"
+      />
+    </div>
+
+    <div id="chat-list">
+      <div id="empty-list">
+        <div class="empty-icon">💬</div>
+        <p>Belum ada percakapan.<br>Tekan <strong>+</strong> untuk mulai chat baru.</p>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- ══════════════════════════════════════════
+       CHAT AREA
+  ═══════════════════════════════════════════ -->
+  <main id="chat-area">
+
+    <!-- Welcome screen (default) -->
+    <div id="welcome-screen">
+      <div class="w-icon">📡</div>
+      <h2>LAN Chat</h2>
+      <p>Pilih percakapan di sidebar atau tekan <strong>+</strong> untuk memulai chat baru dengan device lain di jaringan yang sama.</p>
+      <div class="warning-badge">⚠ HTTP Plaintext — Visible in Wireshark</div>
+    </div>
+
+    <!-- Active chat section (hidden until chat dipilih) -->
+    <div id="chat-area-inner" style="display:none; flex-direction:column; flex:1; overflow:hidden;">
+
+      <!-- Header -->
+      <div id="chat-header">
+        <button class="back-btn" id="btn-back">←</button>
+        <div class="peer-avatar" id="peer-avatar-text">?</div>
+        <div class="peer-info">
+          <div class="peer-ip" id="peer-ip-text">0.0.0.0</div>
+          <div class="peer-status" id="peer-status">○ Offline</div>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div id="messages-container"></div>
+
+      <!-- Typing indicator dihapus (tidak bisa tanpa WebSocket) -->
+      <div id="typing-indicator"></div>
+
+      <!-- File preview strip -->
+      <div id="file-preview">
+        <img id="file-preview-thumb" alt="preview" />
+        <span id="file-preview-name"></span>
+        <button id="btn-cancel-file" title="Batalkan file">✕</button>
+      </div>
+
+      <!-- Input area -->
+      <div id="input-area">
+        <input type="file" id="file-input" accept="*/*" />
+        <button class="btn-icon" id="btn-attach" title="Lampirkan file">📎</button>
+        <textarea
+          id="msg-input"
+          placeholder="Ketik pesan..."
+          rows="1"
+          autocomplete="off"
+        ></textarea>
+        <button id="btn-send" title="Kirim">
+          ➤
+        </button>
+      </div>
+
+    </div><!-- /chat-area-inner -->
+
+  </main>
+
+</div><!-- /app -->
+
+<!-- ══════════════════════════════════════════
+     MODAL: New Chat
+═══════════════════════════════════════════ -->
+<div class="modal-overlay" id="modal-new-chat" style="display:none;">
+  <div class="modal-box">
+    <h3>💬 Chat Baru</h3>
+    <p>Masukkan alamat IP perangkat tujuan di jaringan LAN yang sama.</p>
+    <input
+      type="text"
+      class="modal-input"
+      id="input-peer-ip"
+      placeholder="contoh: 192.168.1.5"
+      maxlength="15"
+      autocomplete="off"
+    />
+    <div class="modal-error" id="modal-error"></div>
+    <div class="modal-actions">
+      <button class="btn-secondary" id="btn-modal-cancel">Batal</button>
+      <button class="btn-primary" id="btn-modal-ok">Mulai Chat</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     LIGHTBOX
+═══════════════════════════════════════════ -->
+<div id="lightbox">
+  <img id="lightbox-img" src="" alt="preview" />
+</div>
+
+<!-- ══════════════════════════════════════════
+     TOAST CONTAINER
+═══════════════════════════════════════════ -->
+<div id="toast-container"></div>
+
+<!-- ══════════════════════════════════════════
+     SCRIPTS — hanya app.js, tidak ada socket.io
+═══════════════════════════════════════════ -->
+<script src="/js/app.js"></script>
+
+</body>
+</html>
